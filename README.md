@@ -1,4 +1,4 @@
-# kbutton.c
+# tinybutton
 
 A small, portable button state machine for embedded systems.
 
@@ -13,7 +13,7 @@ GPIO / input driver
  pressed + time
        |
        v
-   kbutton.c
+   tinybutton.c
        |
        +-- press / release
        +-- click x N
@@ -31,7 +31,7 @@ Buttons look simple until every project reimplements the same details:
 debouncing, click windows, double/triple/multi-click, long press, release, and
 repeat behavior.
 
-`kbutton.c` keeps that policy in one deterministic state machine:
+`tinybutton.c` keeps that policy in one deterministic state machine:
 
 - plain C11 core
 - no dynamic allocation
@@ -45,30 +45,30 @@ repeat behavior.
 ## C API
 
 ```c
-#include "kbutton.h"
+#include "tinybutton.h"
 
-static kbutton_t button;
+static tinybutton_t button;
 
 static void on_button(
-    kbutton_t *button,
-    kbutton_event_t event,
+    tinybutton_t *button,
+    tinybutton_event_t event,
     uint8_t clicks,
     void *user)
 {
     (void)button;
     (void)user;
 
-    if (event == KBUTTON_EVENT_CLICK) {
+    if (event == TINYBUTTON_EVENT_CLICK) {
         // clicks == 1, 2, 3, 4, ...
     }
 }
 
 void app_init(void)
 {
-    kbutton_config_t config = kbutton_default_config();
+    tinybutton_config_t config = tinybutton_default_config();
 
-    kbutton_init(&button, &config);
-    kbutton_set_callback(&button, on_button, NULL);
+    tinybutton_init(&button, &config);
+    tinybutton_set_callback(&button, on_button, NULL);
 }
 
 void app_loop(void)
@@ -76,7 +76,7 @@ void app_loop(void)
     bool pressed = board_button_pressed();
     uint32_t now_ms = board_uptime_ms();
 
-    kbutton_update(&button, pressed, now_ms);
+    tinybutton_update(&button, pressed, now_ms);
 }
 ```
 
@@ -91,18 +91,18 @@ boolean input and a monotonic millisecond counter.
 
 | Event | Meaning |
 | --- | --- |
-| `KBUTTON_EVENT_PRESS` | Debounced transition to pressed |
-| `KBUTTON_EVENT_RELEASE` | Debounced transition to released |
-| `KBUTTON_EVENT_CLICK` | A completed short-click sequence; `clicks` contains the count |
-| `KBUTTON_EVENT_LONG_PRESS` | The hold threshold was reached |
-| `KBUTTON_EVENT_LONG_REPEAT` | Optional periodic event while held |
-| `KBUTTON_EVENT_LONG_RELEASE` | Release after a long press |
+| `TINYBUTTON_EVENT_PRESS` | Debounced transition to pressed |
+| `TINYBUTTON_EVENT_RELEASE` | Debounced transition to released |
+| `TINYBUTTON_EVENT_CLICK` | A completed short-click sequence; `clicks` contains the count |
+| `TINYBUTTON_EVENT_LONG_PRESS` | The hold threshold was reached |
+| `TINYBUTTON_EVENT_LONG_REPEAT` | Optional periodic event while held |
+| `TINYBUTTON_EVENT_LONG_RELEASE` | Release after a long press |
 
 A single, double, triple, or four-click gesture is the same event with a
 different count. The API does not grow a separate callback for every count.
 
 A short click followed by a held press is treated as two gestures: the completed
-click sequence is emitted before `KBUTTON_EVENT_LONG_PRESS`.
+click sequence is emitted before `TINYBUTTON_EVENT_LONG_PRESS`.
 
 ## Timing
 
@@ -116,7 +116,7 @@ Defaults:
 | repeat | disabled | Set a non-zero interval to enable |
 
 ```c
-kbutton_config_t config = {
+tinybutton_config_t config = {
     .debounce_ms = 20,
     .click_ms = 250,
     .long_press_ms = 700,
@@ -128,7 +128,7 @@ Set `long_press_ms` to zero to disable long-press detection. Set
 `repeat_ms` to zero to disable long-repeat events. Set `click_ms` to zero to
 emit every short click immediately.
 
-The first call to `kbutton_update()` establishes the initial state without
+The first call to `tinybutton_update()` establishes the initial state without
 emitting a synthetic press or release event. If the button boots held, long
 press timing starts from that first sample.
 
@@ -137,9 +137,9 @@ press timing starts from that first sample.
 The wrapper is intentionally thin:
 
 ```cpp
-#include <kbutton.hpp>
+#include <tinybutton.hpp>
 
-KButton button(0); // active LOW, INPUT_PULLUP
+TinyButton button(0); // active LOW, INPUT_PULLUP
 
 void setup()
 {
@@ -165,7 +165,7 @@ void loop()
 For other electrical arrangements:
 
 ```cpp
-KButton button(pin, HIGH, INPUT);
+TinyButton button(pin, HIGH, INPUT);
 ```
 
 The wrapper uses function pointers rather than `std::function`, so it does not
@@ -177,12 +177,12 @@ PlatformIO:
 
 ```ini
 lib_deps =
-    https://github.com/lsongdev/kbutton.c.git
+    https://github.com/lsongdev/tinybutton.git
 ```
 
 Arduino IDE users can install the repository as a ZIP library.
 
-Pure C projects can compile `src/kbutton.c` and include `src/kbutton.h`
+Pure C projects can compile `src/tinybutton.c` and include `src/tinybutton.h`
 directly.
 
 ## Development
@@ -196,7 +196,7 @@ and separately compiles the Arduino C++ wrapper against a tiny host stub.
 
 ## Version 3
 
-Version 3 is a deliberate breaking rewrite. The old Arduino-only `KButton.cpp`
+Version 3 is a deliberate breaking rewrite. The old Arduino-only `TinyButton.cpp`
 API is not retained as a compatibility layer.
 
 The original KButton project was inspired by the OneButton approach. Version 3
@@ -206,3 +206,13 @@ Arduino support as an optional layer above it.
 ## License
 
 MIT
+
+## Name and migration
+
+This project was formerly `kbutton.c` / KButton. It is now `tinybutton`, a
+sibling library of [tinymenu](https://github.com/lsongdev/tinymenu). It remains
+independent: GPIO sampling and UI message mapping belong to applications.
+
+Include `tinybutton.h` for C or `tinybutton.hpp` for the optional Arduino wrapper.
+The C API uses `tinybutton_*` types/functions and `TINYBUTTON_*` event constants;
+the C++ class is `TinyButton`. Update existing callers to these names.

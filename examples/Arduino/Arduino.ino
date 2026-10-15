@@ -1,6 +1,6 @@
-#include <kbutton.hpp>
+#include <tinybutton.hpp>
 
-KButton button(0);
+TinyButton button(0);
 
 void setup()
 {

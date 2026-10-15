@@ -1,19 +1,19 @@
 #######################################
-# Syntax Coloring Map for KButton
+# Syntax Coloring Map for TinyButton
 #######################################
 
-KButton	KEYWORD1
-kbutton_t	KEYWORD1
-kbutton_config_t	KEYWORD1
-kbutton_event_t	KEYWORD1
+TinyButton	KEYWORD1
+tinybutton_t	KEYWORD1
+tinybutton_config_t	KEYWORD1
+tinybutton_event_t	KEYWORD1
 
-kbutton_init	KEYWORD2
-kbutton_reset	KEYWORD2
-kbutton_configure	KEYWORD2
-kbutton_set_callback	KEYWORD2
-kbutton_update	KEYWORD2
-kbutton_is_pressed	KEYWORD2
-kbutton_is_long_pressed	KEYWORD2
+tinybutton_init	KEYWORD2
+tinybutton_reset	KEYWORD2
+tinybutton_configure	KEYWORD2
+tinybutton_set_callback	KEYWORD2
+tinybutton_update	KEYWORD2
+tinybutton_is_pressed	KEYWORD2
+tinybutton_is_long_pressed	KEYWORD2
 
 begin	KEYWORD2
 tick	KEYWORD2
@@ -24,9 +24,9 @@ onLongPress	KEYWORD2
 onLongRepeat	KEYWORD2
 onLongRelease	KEYWORD2
 
-KBUTTON_EVENT_PRESS	LITERAL1
-KBUTTON_EVENT_RELEASE	LITERAL1
-KBUTTON_EVENT_CLICK	LITERAL1
-KBUTTON_EVENT_LONG_PRESS	LITERAL1
-KBUTTON_EVENT_LONG_REPEAT	LITERAL1
-KBUTTON_EVENT_LONG_RELEASE	LITERAL1
+TINYBUTTON_EVENT_PRESS	LITERAL1
+TINYBUTTON_EVENT_RELEASE	LITERAL1
+TINYBUTTON_EVENT_CLICK	LITERAL1
+TINYBUTTON_EVENT_LONG_PRESS	LITERAL1
+TINYBUTTON_EVENT_LONG_REPEAT	LITERAL1
+TINYBUTTON_EVENT_LONG_RELEASE	LITERAL1

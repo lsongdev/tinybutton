@@ -1,31 +1,31 @@
-#ifndef KBUTTON_HPP
-#define KBUTTON_HPP
+#ifndef TINYBUTTON_HPP
+#define TINYBUTTON_HPP
 
 #include <Arduino.h>
 
-#include "kbutton.h"
+#include "tinybutton.h"
 
-class KButton {
+class TinyButton {
 public:
     using Callback = void (*)();
     using ClickCallback = void (*)(uint8_t count);
 
-    explicit KButton(
+    explicit TinyButton(
         uint8_t pin,
         uint8_t activeLevel = LOW,
         uint8_t pinModeValue = INPUT_PULLUP)
         : pin_(pin),
           active_level_(activeLevel),
           pin_mode_(pinModeValue),
-          config_(kbutton_default_config())
+          config_(tinybutton_default_config())
     {
     }
 
     void begin()
     {
         pinMode(pin_, pin_mode_);
-        kbutton_init(&button_, &config_);
-        kbutton_set_callback(&button_, dispatch, this);
+        tinybutton_init(&button_, &config_);
+        tinybutton_set_callback(&button_, dispatch, this);
         started_ = true;
 
         // Establish the initial level without synthesizing a boot-time event.
@@ -37,7 +37,7 @@ public:
         if (!started_)
             return;
 
-        kbutton_update(
+        tinybutton_update(
             &button_,
             digitalRead(pin_) == active_level_,
             millis());
@@ -46,7 +46,7 @@ public:
     void reset()
     {
         if (started_)
-            kbutton_reset(&button_);
+            tinybutton_reset(&button_);
     }
 
     void setDebounceMs(uint32_t ms)
@@ -105,59 +105,59 @@ public:
 
     bool pressed() const
     {
-        return kbutton_is_pressed(&button_);
+        return tinybutton_is_pressed(&button_);
     }
 
     bool longPressed() const
     {
-        return kbutton_is_long_pressed(&button_);
+        return tinybutton_is_long_pressed(&button_);
     }
 
-    kbutton_t *core()
+    tinybutton_t *core()
     {
         return &button_;
     }
 
-    const kbutton_t *core() const
+    const tinybutton_t *core() const
     {
         return &button_;
     }
 
 private:
     static void dispatch(
-        kbutton_t *,
-        kbutton_event_t event,
+        tinybutton_t *,
+        tinybutton_event_t event,
         uint8_t clicks,
         void *user)
     {
-        static_cast<KButton *>(user)->handle(event, clicks);
+        static_cast<TinyButton *>(user)->handle(event, clicks);
     }
 
-    void handle(kbutton_event_t event, uint8_t clicks)
+    void handle(tinybutton_event_t event, uint8_t clicks)
     {
         switch (event)
         {
-        case KBUTTON_EVENT_PRESS:
+        case TINYBUTTON_EVENT_PRESS:
             if (press_ != nullptr)
                 press_();
             break;
-        case KBUTTON_EVENT_RELEASE:
+        case TINYBUTTON_EVENT_RELEASE:
             if (release_ != nullptr)
                 release_();
             break;
-        case KBUTTON_EVENT_CLICK:
+        case TINYBUTTON_EVENT_CLICK:
             if (clicks_ != nullptr)
                 clicks_(clicks);
             break;
-        case KBUTTON_EVENT_LONG_PRESS:
+        case TINYBUTTON_EVENT_LONG_PRESS:
             if (long_press_ != nullptr)
                 long_press_();
             break;
-        case KBUTTON_EVENT_LONG_REPEAT:
+        case TINYBUTTON_EVENT_LONG_REPEAT:
             if (long_repeat_ != nullptr)
                 long_repeat_();
             break;
-        case KBUTTON_EVENT_LONG_RELEASE:
+        case TINYBUTTON_EVENT_LONG_RELEASE:
             if (long_release_ != nullptr)
                 long_release_();
             break;
@@ -167,7 +167,7 @@ private:
     void applyConfig()
     {
         if (started_)
-            kbutton_configure(&button_, &config_);
+            tinybutton_configure(&button_, &config_);
     }
 
     uint8_t pin_;
@@ -175,8 +175,8 @@ private:
     uint8_t pin_mode_;
     bool started_ = false;
 
-    kbutton_config_t config_;
-    kbutton_t button_ = {};
+    tinybutton_config_t config_;
+    tinybutton_t button_ = {};
 
     Callback press_ = nullptr;
     Callback release_ = nullptr;

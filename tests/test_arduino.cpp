@@ -1,4 +1,4 @@
-#include "kbutton.hpp"
+#include "tinybutton.hpp"
 
 #include <cassert>
 #include <cstdint>
@@ -53,7 +53,7 @@ static void on_long_press()
 
 int main()
 {
-    KButton button(7);
+    TinyButton button(7);
     button.setDebounceMs(0);
     button.setClickMs(50);
     button.setLongPressMs(100);

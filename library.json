@@ -1,5 +1,5 @@
 {
-  "name": "KButton",
+  "name": "tinybutton",
   "version": "3.0.0",
   "keywords": [
     "embedded",
@@ -11,7 +11,7 @@
   "description": "Portable C button state machine with multi-click and long-press detection plus an optional Arduino C++ wrapper.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/lsongdev/kbutton.c.git"
+    "url": "https://github.com/lsongdev/tinybutton.git"
   },
   "authors": {
     "name": "Lsong",
@@ -19,7 +19,7 @@
     "url": "https://lsong.org"
   },
   "license": "MIT",
-  "homepage": "https://github.com/lsongdev/kbutton.c",
-  "frameworks": "arduino",
+  "homepage": "https://github.com/lsongdev/tinybutton",
+  "frameworks": "*",
   "platforms": "*"
 }

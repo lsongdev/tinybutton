@@ -12,17 +12,17 @@ all: test
 $(BUILD):
 	mkdir -p $(BUILD)
 
-$(BUILD)/kbutton.o: src/kbutton.c src/kbutton.h | $(BUILD)
-	$(CC) $(CFLAGS) -c src/kbutton.c -o $@
+$(BUILD)/tinybutton.o: src/tinybutton.c src/tinybutton.h | $(BUILD)
+	$(CC) $(CFLAGS) -c src/tinybutton.c -o $@
 
-$(BUILD)/test_kbutton: tests/test_kbutton.c $(BUILD)/kbutton.o
-	$(CC) $(CFLAGS) tests/test_kbutton.c $(BUILD)/kbutton.o -o $@
+$(BUILD)/test_tinybutton: tests/test_tinybutton.c $(BUILD)/tinybutton.o
+	$(CC) $(CFLAGS) tests/test_tinybutton.c $(BUILD)/tinybutton.o -o $@
 
-$(BUILD)/test_arduino: tests/test_arduino.cpp src/kbutton.hpp $(BUILD)/kbutton.o
-	$(CXX) $(CXXFLAGS) tests/test_arduino.cpp $(BUILD)/kbutton.o -o $@
+$(BUILD)/test_arduino: tests/test_arduino.cpp src/tinybutton.hpp $(BUILD)/tinybutton.o
+	$(CXX) $(CXXFLAGS) tests/test_arduino.cpp $(BUILD)/tinybutton.o -o $@
 
-test: $(BUILD)/test_kbutton $(BUILD)/test_arduino
-	./$(BUILD)/test_kbutton
+test: $(BUILD)/test_tinybutton $(BUILD)/test_arduino
+	./$(BUILD)/test_tinybutton
 	./$(BUILD)/test_arduino
 
 clean:
