@@ -20,27 +20,27 @@ typedef enum {
     TB_EVENT_LONG_PRESS,
     TB_EVENT_LONG_REPEAT,
     TB_EVENT_LONG_RELEASE,
-} tb_event_t;
+} tb_event;
 
 typedef struct {
     uint32_t debounce_ms;
     uint32_t click_ms;
     uint32_t long_press_ms;
     uint32_t repeat_ms;
-} tb_config_t;
+} tb_config;
 
 struct tb_button;
-typedef struct tb_button tb_t;
+typedef struct tb_button tb_button;
 
-typedef void (*tb_callback_t)(
-    tb_t *button,
-    tb_event_t event,
+typedef void (*tb_button_cb)(
+    tb_button *button,
+    tb_event event,
     uint8_t clicks,
     void *user);
 
 struct tb_button {
-    tb_config_t config;
-    tb_callback_t callback;
+    tb_config config;
+    tb_button_cb callback;
     void *user;
 
     uint32_t raw_changed_at;
@@ -55,20 +55,20 @@ struct tb_button {
     bool long_pressed;
 };
 
-tb_config_t tb_default_config(void);
+tb_config tb_default_config(void);
 
-void tb_init(tb_t *button, const tb_config_t *config);
-void tb_reset(tb_t *button);
-void tb_configure(tb_t *button, const tb_config_t *config);
+void tb_init(tb_button *button, const tb_config *config);
+void tb_reset(tb_button *button);
+void tb_configure(tb_button *button, const tb_config *config);
 void tb_set_callback(
-    tb_t *button,
-    tb_callback_t callback,
+    tb_button *button,
+    tb_button_cb callback,
     void *user);
 
-void tb_update(tb_t *button, bool pressed, uint32_t now_ms);
+void tb_update(tb_button *button, bool pressed, uint32_t now_ms);
 
-bool tb_is_pressed(const tb_t *button);
-bool tb_is_long_pressed(const tb_t *button);
+bool tb_is_pressed(const tb_button *button);
+bool tb_is_long_pressed(const tb_button *button);
 
 #ifdef __cplusplus
 }

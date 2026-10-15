@@ -5,7 +5,7 @@
 #include <stdio.h>
 
 typedef struct {
-    tb_event_t event;
+    tb_event event;
     uint8_t clicks;
 } recorded_event_t;
 
@@ -13,8 +13,8 @@ static recorded_event_t events[32];
 static unsigned event_count;
 
 static void record_event(
-    tb_t *button,
-    tb_event_t event,
+    tb_button *button,
+    tb_event event,
     uint8_t clicks,
     void *user)
 {
@@ -26,9 +26,9 @@ static void record_event(
     event_count++;
 }
 
-static tb_t make_button(tb_config_t config)
+static tb_button make_button(tb_config config)
 {
-    tb_t button;
+    tb_button button;
     event_count = 0;
     tb_init(&button, &config);
     tb_set_callback(&button, record_event, NULL);
@@ -37,7 +37,7 @@ static tb_t make_button(tb_config_t config)
 
 static void expect_event(
     unsigned index,
-    tb_event_t event,
+    tb_event event,
     uint8_t clicks)
 {
     assert(index < event_count);
@@ -47,8 +47,8 @@ static void expect_event(
 
 static void test_debounce_and_single_click(void)
 {
-    tb_config_t config = {20, 100, 500, 0};
-    tb_t button = make_button(config);
+    tb_config config = {20, 100, 500, 0};
+    tb_button button = make_button(config);
 
     tb_update(&button, false, 0);
     tb_update(&button, true, 10);
@@ -74,8 +74,8 @@ static void test_debounce_and_single_click(void)
 
 static void test_multi_click(void)
 {
-    tb_config_t config = {0, 100, 500, 0};
-    tb_t button = make_button(config);
+    tb_config config = {0, 100, 500, 0};
+    tb_button button = make_button(config);
 
     tb_update(&button, false, 0);
 
@@ -98,8 +98,8 @@ static void test_multi_click(void)
 
 static void test_long_press_repeat_and_release(void)
 {
-    tb_config_t config = {0, 100, 200, 50};
-    tb_t button = make_button(config);
+    tb_config config = {0, 100, 200, 50};
+    tb_button button = make_button(config);
 
     tb_update(&button, false, 0);
     tb_update(&button, true, 10);
@@ -129,8 +129,8 @@ static void test_long_press_repeat_and_release(void)
 
 static void test_click_then_long_press(void)
 {
-    tb_config_t config = {0, 100, 200, 0};
-    tb_t button = make_button(config);
+    tb_config config = {0, 100, 200, 0};
+    tb_button button = make_button(config);
 
     tb_update(&button, false, 0);
     tb_update(&button, true, 10);
@@ -151,8 +151,8 @@ static void test_click_then_long_press(void)
 
 static void test_release_candidate_freezes_long_press_deadline(void)
 {
-    tb_config_t config = {40, 300, 1000, 0};
-    tb_t button = make_button(config);
+    tb_config config = {40, 300, 1000, 0};
+    tb_button button = make_button(config);
 
     tb_update(&button, false, 0);
 
@@ -180,8 +180,8 @@ static void test_release_candidate_freezes_long_press_deadline(void)
 
 static void test_press_candidate_freezes_click_deadline(void)
 {
-    tb_config_t config = {30, 100, 500, 0};
-    tb_t button = make_button(config);
+    tb_config config = {30, 100, 500, 0};
+    tb_button button = make_button(config);
 
     tb_update(&button, false, 0);
 
@@ -208,8 +208,8 @@ static void test_press_candidate_freezes_click_deadline(void)
 
 static void test_timer_wraparound(void)
 {
-    tb_config_t config = {0, 100, 20, 0};
-    tb_t button = make_button(config);
+    tb_config config = {0, 100, 20, 0};
+    tb_button button = make_button(config);
 
     tb_update(&button, false, UINT32_MAX - 20u);
     tb_update(&button, true, UINT32_MAX - 5u);
@@ -223,8 +223,8 @@ static void test_timer_wraparound(void)
 
 static void test_reset_preserves_configuration_and_callback(void)
 {
-    tb_config_t config = {0, 50, 0, 0};
-    tb_t button = make_button(config);
+    tb_config config = {0, 50, 0, 0};
+    tb_button button = make_button(config);
 
     tb_update(&button, false, 0);
     tb_update(&button, true, 10);

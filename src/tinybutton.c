@@ -10,15 +10,15 @@ static uint32_t elapsed(uint32_t now, uint32_t since)
 }
 
 static void emit(
-    tb_t *button,
-    tb_event_t event,
+    tb_button *button,
+    tb_event event,
     uint8_t clicks)
 {
     if (button->callback != NULL)
         button->callback(button, event, clicks, button->user);
 }
 
-static void finish_clicks(tb_t *button)
+static void finish_clicks(tb_button *button)
 {
     if (button->clicks == 0)
         return;
@@ -29,7 +29,7 @@ static void finish_clicks(tb_t *button)
 }
 
 static void stable_transition(
-    tb_t *button,
+    tb_button *button,
     bool pressed,
     uint32_t now)
 {
@@ -63,9 +63,9 @@ static void stable_transition(
         finish_clicks(button);
 }
 
-tb_config_t tb_default_config(void)
+tb_config tb_default_config(void)
 {
-    const tb_config_t config = {
+    const tb_config config = {
         TB_DEFAULT_DEBOUNCE_MS,
         TB_DEFAULT_CLICK_MS,
         TB_DEFAULT_LONG_PRESS_MS,
@@ -75,8 +75,8 @@ tb_config_t tb_default_config(void)
 }
 
 void tb_init(
-    tb_t *button,
-    const tb_config_t *config)
+    tb_button *button,
+    const tb_config *config)
 {
     if (button == NULL)
         return;
@@ -87,13 +87,13 @@ void tb_init(
         : tb_default_config();
 }
 
-void tb_reset(tb_t *button)
+void tb_reset(tb_button *button)
 {
     if (button == NULL)
         return;
 
-    const tb_config_t config = button->config;
-    const tb_callback_t callback = button->callback;
+    const tb_config config = button->config;
+    const tb_button_cb callback = button->callback;
     void *const user = button->user;
 
     memset(button, 0, sizeof(*button));
@@ -103,8 +103,8 @@ void tb_reset(tb_t *button)
 }
 
 void tb_configure(
-    tb_t *button,
-    const tb_config_t *config)
+    tb_button *button,
+    const tb_config *config)
 {
     if (button == NULL || config == NULL)
         return;
@@ -113,8 +113,8 @@ void tb_configure(
 }
 
 void tb_set_callback(
-    tb_t *button,
-    tb_callback_t callback,
+    tb_button *button,
+    tb_button_cb callback,
     void *user)
 {
     if (button == NULL)
@@ -125,7 +125,7 @@ void tb_set_callback(
 }
 
 void tb_update(
-    tb_t *button,
+    tb_button *button,
     bool pressed,
     uint32_t now)
 {
@@ -203,12 +203,12 @@ void tb_update(
     }
 }
 
-bool tb_is_pressed(const tb_t *button)
+bool tb_is_pressed(const tb_button *button)
 {
     return button != NULL && button->pressed;
 }
 
-bool tb_is_long_pressed(const tb_t *button)
+bool tb_is_long_pressed(const tb_button *button)
 {
     return button != NULL && button->long_pressed;
 }

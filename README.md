@@ -47,11 +47,11 @@ repeat behavior.
 ```c
 #include "tinybutton.h"
 
-static tb_t button;
+static tb_button button;
 
 static void on_button(
-    tb_t *button,
-    tb_event_t event,
+    tb_button *button,
+    tb_event event,
     uint8_t clicks,
     void *user)
 {
@@ -65,7 +65,7 @@ static void on_button(
 
 void app_init(void)
 {
-    tb_config_t config = tb_default_config();
+    tb_config config = tb_default_config();
 
     tb_init(&button, &config);
     tb_set_callback(&button, on_button, NULL);
@@ -116,7 +116,7 @@ Defaults:
 | repeat | disabled | Set a non-zero interval to enable |
 
 ```c
-tb_config_t config = {
+tb_config config = {
     .debounce_ms = 20,
     .click_ms = 250,
     .long_press_ms = 700,

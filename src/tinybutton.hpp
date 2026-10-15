@@ -113,27 +113,27 @@ public:
         return tb_is_long_pressed(&button_);
     }
 
-    tb_t *core()
+    tb_button *core()
     {
         return &button_;
     }
 
-    const tb_t *core() const
+    const tb_button *core() const
     {
         return &button_;
     }
 
 private:
     static void dispatch(
-        tb_t *,
-        tb_event_t event,
+        tb_button *,
+        tb_event event,
         uint8_t clicks,
         void *user)
     {
         static_cast<TinyButton *>(user)->handle(event, clicks);
     }
 
-    void handle(tb_event_t event, uint8_t clicks)
+    void handle(tb_event event, uint8_t clicks)
     {
         switch (event)
         {
@@ -175,8 +175,8 @@ private:
     uint8_t pin_mode_;
     bool started_ = false;
 
-    tb_config_t config_;
-    tb_t button_ = {};
+    tb_config config_;
+    tb_button button_ = {};
 
     Callback press_ = nullptr;
     Callback release_ = nullptr;
