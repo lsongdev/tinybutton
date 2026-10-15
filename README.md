@@ -47,28 +47,28 @@ repeat behavior.
 ```c
 #include "tinybutton.h"
 
-static tinybutton_t button;
+static tb_t button;
 
 static void on_button(
-    tinybutton_t *button,
-    tinybutton_event_t event,
+    tb_t *button,
+    tb_event_t event,
     uint8_t clicks,
     void *user)
 {
     (void)button;
     (void)user;
 
-    if (event == TINYBUTTON_EVENT_CLICK) {
+    if (event == TB_EVENT_CLICK) {
         // clicks == 1, 2, 3, 4, ...
     }
 }
 
 void app_init(void)
 {
-    tinybutton_config_t config = tinybutton_default_config();
+    tb_config_t config = tb_default_config();
 
-    tinybutton_init(&button, &config);
-    tinybutton_set_callback(&button, on_button, NULL);
+    tb_init(&button, &config);
+    tb_set_callback(&button, on_button, NULL);
 }
 
 void app_loop(void)
@@ -76,7 +76,7 @@ void app_loop(void)
     bool pressed = board_button_pressed();
     uint32_t now_ms = board_uptime_ms();
 
-    tinybutton_update(&button, pressed, now_ms);
+    tb_update(&button, pressed, now_ms);
 }
 ```
 
@@ -91,18 +91,18 @@ boolean input and a monotonic millisecond counter.
 
 | Event | Meaning |
 | --- | --- |
-| `TINYBUTTON_EVENT_PRESS` | Debounced transition to pressed |
-| `TINYBUTTON_EVENT_RELEASE` | Debounced transition to released |
-| `TINYBUTTON_EVENT_CLICK` | A completed short-click sequence; `clicks` contains the count |
-| `TINYBUTTON_EVENT_LONG_PRESS` | The hold threshold was reached |
-| `TINYBUTTON_EVENT_LONG_REPEAT` | Optional periodic event while held |
-| `TINYBUTTON_EVENT_LONG_RELEASE` | Release after a long press |
+| `TB_EVENT_PRESS` | Debounced transition to pressed |
+| `TB_EVENT_RELEASE` | Debounced transition to released |
+| `TB_EVENT_CLICK` | A completed short-click sequence; `clicks` contains the count |
+| `TB_EVENT_LONG_PRESS` | The hold threshold was reached |
+| `TB_EVENT_LONG_REPEAT` | Optional periodic event while held |
+| `TB_EVENT_LONG_RELEASE` | Release after a long press |
 
 A single, double, triple, or four-click gesture is the same event with a
 different count. The API does not grow a separate callback for every count.
 
 A short click followed by a held press is treated as two gestures: the completed
-click sequence is emitted before `TINYBUTTON_EVENT_LONG_PRESS`.
+click sequence is emitted before `TB_EVENT_LONG_PRESS`.
 
 ## Timing
 
@@ -116,7 +116,7 @@ Defaults:
 | repeat | disabled | Set a non-zero interval to enable |
 
 ```c
-tinybutton_config_t config = {
+tb_config_t config = {
     .debounce_ms = 20,
     .click_ms = 250,
     .long_press_ms = 700,
@@ -128,7 +128,7 @@ Set `long_press_ms` to zero to disable long-press detection. Set
 `repeat_ms` to zero to disable long-repeat events. Set `click_ms` to zero to
 emit every short click immediately.
 
-The first call to `tinybutton_update()` establishes the initial state without
+The first call to `tb_update()` establishes the initial state without
 emitting a synthetic press or release event. If the button boots held, long
 press timing starts from that first sample.
 
@@ -214,5 +214,5 @@ sibling library of [tinymenu](https://github.com/lsongdev/tinymenu). It remains
 independent: GPIO sampling and UI message mapping belong to applications.
 
 Include `tinybutton.h` for C or `tinybutton.hpp` for the optional Arduino wrapper.
-The C API uses `tinybutton_*` types/functions and `TINYBUTTON_*` event constants;
+The C API uses `tb_*` types/functions and `TB_*` event constants;
 the C++ class is `TinyButton`. Update existing callers to these names.

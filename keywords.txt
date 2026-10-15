@@ -3,17 +3,17 @@
 #######################################
 
 TinyButton	KEYWORD1
-tinybutton_t	KEYWORD1
-tinybutton_config_t	KEYWORD1
-tinybutton_event_t	KEYWORD1
+tb_t	KEYWORD1
+tb_config_t	KEYWORD1
+tb_event_t	KEYWORD1
 
-tinybutton_init	KEYWORD2
-tinybutton_reset	KEYWORD2
-tinybutton_configure	KEYWORD2
-tinybutton_set_callback	KEYWORD2
-tinybutton_update	KEYWORD2
-tinybutton_is_pressed	KEYWORD2
-tinybutton_is_long_pressed	KEYWORD2
+tb_init	KEYWORD2
+tb_reset	KEYWORD2
+tb_configure	KEYWORD2
+tb_set_callback	KEYWORD2
+tb_update	KEYWORD2
+tb_is_pressed	KEYWORD2
+tb_is_long_pressed	KEYWORD2
 
 begin	KEYWORD2
 tick	KEYWORD2
@@ -24,9 +24,9 @@ onLongPress	KEYWORD2
 onLongRepeat	KEYWORD2
 onLongRelease	KEYWORD2
 
-TINYBUTTON_EVENT_PRESS	LITERAL1
-TINYBUTTON_EVENT_RELEASE	LITERAL1
-TINYBUTTON_EVENT_CLICK	LITERAL1
-TINYBUTTON_EVENT_LONG_PRESS	LITERAL1
-TINYBUTTON_EVENT_LONG_REPEAT	LITERAL1
-TINYBUTTON_EVENT_LONG_RELEASE	LITERAL1
+TB_EVENT_PRESS	LITERAL1
+TB_EVENT_RELEASE	LITERAL1
+TB_EVENT_CLICK	LITERAL1
+TB_EVENT_LONG_PRESS	LITERAL1
+TB_EVENT_LONG_REPEAT	LITERAL1
+TB_EVENT_LONG_RELEASE	LITERAL1

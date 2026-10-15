@@ -8,39 +8,39 @@
 extern "C" {
 #endif
 
-#define TINYBUTTON_DEFAULT_DEBOUNCE_MS 30u
-#define TINYBUTTON_DEFAULT_CLICK_MS 300u
-#define TINYBUTTON_DEFAULT_LONG_PRESS_MS 800u
-#define TINYBUTTON_DEFAULT_REPEAT_MS 0u
+#define TB_DEFAULT_DEBOUNCE_MS 30u
+#define TB_DEFAULT_CLICK_MS 300u
+#define TB_DEFAULT_LONG_PRESS_MS 800u
+#define TB_DEFAULT_REPEAT_MS 0u
 
 typedef enum {
-    TINYBUTTON_EVENT_PRESS = 0,
-    TINYBUTTON_EVENT_RELEASE,
-    TINYBUTTON_EVENT_CLICK,
-    TINYBUTTON_EVENT_LONG_PRESS,
-    TINYBUTTON_EVENT_LONG_REPEAT,
-    TINYBUTTON_EVENT_LONG_RELEASE,
-} tinybutton_event_t;
+    TB_EVENT_PRESS = 0,
+    TB_EVENT_RELEASE,
+    TB_EVENT_CLICK,
+    TB_EVENT_LONG_PRESS,
+    TB_EVENT_LONG_REPEAT,
+    TB_EVENT_LONG_RELEASE,
+} tb_event_t;
 
 typedef struct {
     uint32_t debounce_ms;
     uint32_t click_ms;
     uint32_t long_press_ms;
     uint32_t repeat_ms;
-} tinybutton_config_t;
+} tb_config_t;
 
-struct tinybutton;
-typedef struct tinybutton tinybutton_t;
+struct tb_button;
+typedef struct tb_button tb_t;
 
-typedef void (*tinybutton_callback_t)(
-    tinybutton_t *button,
-    tinybutton_event_t event,
+typedef void (*tb_callback_t)(
+    tb_t *button,
+    tb_event_t event,
     uint8_t clicks,
     void *user);
 
-struct tinybutton {
-    tinybutton_config_t config;
-    tinybutton_callback_t callback;
+struct tb_button {
+    tb_config_t config;
+    tb_callback_t callback;
     void *user;
 
     uint32_t raw_changed_at;
@@ -55,20 +55,20 @@ struct tinybutton {
     bool long_pressed;
 };
 
-tinybutton_config_t tinybutton_default_config(void);
+tb_config_t tb_default_config(void);
 
-void tinybutton_init(tinybutton_t *button, const tinybutton_config_t *config);
-void tinybutton_reset(tinybutton_t *button);
-void tinybutton_configure(tinybutton_t *button, const tinybutton_config_t *config);
-void tinybutton_set_callback(
-    tinybutton_t *button,
-    tinybutton_callback_t callback,
+void tb_init(tb_t *button, const tb_config_t *config);
+void tb_reset(tb_t *button);
+void tb_configure(tb_t *button, const tb_config_t *config);
+void tb_set_callback(
+    tb_t *button,
+    tb_callback_t callback,
     void *user);
 
-void tinybutton_update(tinybutton_t *button, bool pressed, uint32_t now_ms);
+void tb_update(tb_t *button, bool pressed, uint32_t now_ms);
 
-bool tinybutton_is_pressed(const tinybutton_t *button);
-bool tinybutton_is_long_pressed(const tinybutton_t *button);
+bool tb_is_pressed(const tb_t *button);
+bool tb_is_long_pressed(const tb_t *button);
 
 #ifdef __cplusplus
 }

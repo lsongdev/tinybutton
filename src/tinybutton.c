@@ -10,26 +10,26 @@ static uint32_t elapsed(uint32_t now, uint32_t since)
 }
 
 static void emit(
-    tinybutton_t *button,
-    tinybutton_event_t event,
+    tb_t *button,
+    tb_event_t event,
     uint8_t clicks)
 {
     if (button->callback != NULL)
         button->callback(button, event, clicks, button->user);
 }
 
-static void finish_clicks(tinybutton_t *button)
+static void finish_clicks(tb_t *button)
 {
     if (button->clicks == 0)
         return;
 
     const uint8_t clicks = button->clicks;
     button->clicks = 0;
-    emit(button, TINYBUTTON_EVENT_CLICK, clicks);
+    emit(button, TB_EVENT_CLICK, clicks);
 }
 
 static void stable_transition(
-    tinybutton_t *button,
+    tb_t *button,
     bool pressed,
     uint32_t now)
 {
@@ -40,17 +40,17 @@ static void stable_transition(
         button->pressed_at = now;
         button->repeated_at = now;
         button->long_pressed = false;
-        emit(button, TINYBUTTON_EVENT_PRESS, 0);
+        emit(button, TB_EVENT_PRESS, 0);
         return;
     }
 
-    emit(button, TINYBUTTON_EVENT_RELEASE, 0);
+    emit(button, TB_EVENT_RELEASE, 0);
 
     if (button->long_pressed)
     {
         button->long_pressed = false;
         button->clicks = 0;
-        emit(button, TINYBUTTON_EVENT_LONG_RELEASE, 0);
+        emit(button, TB_EVENT_LONG_RELEASE, 0);
         return;
     }
 
@@ -63,20 +63,20 @@ static void stable_transition(
         finish_clicks(button);
 }
 
-tinybutton_config_t tinybutton_default_config(void)
+tb_config_t tb_default_config(void)
 {
-    const tinybutton_config_t config = {
-        TINYBUTTON_DEFAULT_DEBOUNCE_MS,
-        TINYBUTTON_DEFAULT_CLICK_MS,
-        TINYBUTTON_DEFAULT_LONG_PRESS_MS,
-        TINYBUTTON_DEFAULT_REPEAT_MS,
+    const tb_config_t config = {
+        TB_DEFAULT_DEBOUNCE_MS,
+        TB_DEFAULT_CLICK_MS,
+        TB_DEFAULT_LONG_PRESS_MS,
+        TB_DEFAULT_REPEAT_MS,
     };
     return config;
 }
 
-void tinybutton_init(
-    tinybutton_t *button,
-    const tinybutton_config_t *config)
+void tb_init(
+    tb_t *button,
+    const tb_config_t *config)
 {
     if (button == NULL)
         return;
@@ -84,16 +84,16 @@ void tinybutton_init(
     memset(button, 0, sizeof(*button));
     button->config = config != NULL
         ? *config
-        : tinybutton_default_config();
+        : tb_default_config();
 }
 
-void tinybutton_reset(tinybutton_t *button)
+void tb_reset(tb_t *button)
 {
     if (button == NULL)
         return;
 
-    const tinybutton_config_t config = button->config;
-    const tinybutton_callback_t callback = button->callback;
+    const tb_config_t config = button->config;
+    const tb_callback_t callback = button->callback;
     void *const user = button->user;
 
     memset(button, 0, sizeof(*button));
@@ -102,9 +102,9 @@ void tinybutton_reset(tinybutton_t *button)
     button->user = user;
 }
 
-void tinybutton_configure(
-    tinybutton_t *button,
-    const tinybutton_config_t *config)
+void tb_configure(
+    tb_t *button,
+    const tb_config_t *config)
 {
     if (button == NULL || config == NULL)
         return;
@@ -112,9 +112,9 @@ void tinybutton_configure(
     button->config = *config;
 }
 
-void tinybutton_set_callback(
-    tinybutton_t *button,
-    tinybutton_callback_t callback,
+void tb_set_callback(
+    tb_t *button,
+    tb_callback_t callback,
     void *user)
 {
     if (button == NULL)
@@ -124,8 +124,8 @@ void tinybutton_set_callback(
     button->user = user;
 }
 
-void tinybutton_update(
-    tinybutton_t *button,
+void tb_update(
+    tb_t *button,
     bool pressed,
     uint32_t now)
 {
@@ -177,7 +177,7 @@ void tinybutton_update(
         finish_clicks(button);
         button->long_pressed = true;
         button->repeated_at = now;
-        emit(button, TINYBUTTON_EVENT_LONG_PRESS, 0);
+        emit(button, TB_EVENT_LONG_PRESS, 0);
     }
 
     if (button->pressed &&
@@ -186,7 +186,7 @@ void tinybutton_update(
         elapsed(now, button->repeated_at) >= button->config.repeat_ms)
     {
         button->repeated_at = now;
-        emit(button, TINYBUTTON_EVENT_LONG_REPEAT, 0);
+        emit(button, TB_EVENT_LONG_REPEAT, 0);
     }
 
     /*
@@ -203,12 +203,12 @@ void tinybutton_update(
     }
 }
 
-bool tinybutton_is_pressed(const tinybutton_t *button)
+bool tb_is_pressed(const tb_t *button)
 {
     return button != NULL && button->pressed;
 }
 
-bool tinybutton_is_long_pressed(const tinybutton_t *button)
+bool tb_is_long_pressed(const tb_t *button)
 {
     return button != NULL && button->long_pressed;
 }

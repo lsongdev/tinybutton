@@ -17,15 +17,15 @@ public:
         : pin_(pin),
           active_level_(activeLevel),
           pin_mode_(pinModeValue),
-          config_(tinybutton_default_config())
+          config_(tb_default_config())
     {
     }
 
     void begin()
     {
         pinMode(pin_, pin_mode_);
-        tinybutton_init(&button_, &config_);
-        tinybutton_set_callback(&button_, dispatch, this);
+        tb_init(&button_, &config_);
+        tb_set_callback(&button_, dispatch, this);
         started_ = true;
 
         // Establish the initial level without synthesizing a boot-time event.
@@ -37,7 +37,7 @@ public:
         if (!started_)
             return;
 
-        tinybutton_update(
+        tb_update(
             &button_,
             digitalRead(pin_) == active_level_,
             millis());
@@ -46,7 +46,7 @@ public:
     void reset()
     {
         if (started_)
-            tinybutton_reset(&button_);
+            tb_reset(&button_);
     }
 
     void setDebounceMs(uint32_t ms)
@@ -105,59 +105,59 @@ public:
 
     bool pressed() const
     {
-        return tinybutton_is_pressed(&button_);
+        return tb_is_pressed(&button_);
     }
 
     bool longPressed() const
     {
-        return tinybutton_is_long_pressed(&button_);
+        return tb_is_long_pressed(&button_);
     }
 
-    tinybutton_t *core()
+    tb_t *core()
     {
         return &button_;
     }
 
-    const tinybutton_t *core() const
+    const tb_t *core() const
     {
         return &button_;
     }
 
 private:
     static void dispatch(
-        tinybutton_t *,
-        tinybutton_event_t event,
+        tb_t *,
+        tb_event_t event,
         uint8_t clicks,
         void *user)
     {
         static_cast<TinyButton *>(user)->handle(event, clicks);
     }
 
-    void handle(tinybutton_event_t event, uint8_t clicks)
+    void handle(tb_event_t event, uint8_t clicks)
     {
         switch (event)
         {
-        case TINYBUTTON_EVENT_PRESS:
+        case TB_EVENT_PRESS:
             if (press_ != nullptr)
                 press_();
             break;
-        case TINYBUTTON_EVENT_RELEASE:
+        case TB_EVENT_RELEASE:
             if (release_ != nullptr)
                 release_();
             break;
-        case TINYBUTTON_EVENT_CLICK:
+        case TB_EVENT_CLICK:
             if (clicks_ != nullptr)
                 clicks_(clicks);
             break;
-        case TINYBUTTON_EVENT_LONG_PRESS:
+        case TB_EVENT_LONG_PRESS:
             if (long_press_ != nullptr)
                 long_press_();
             break;
-        case TINYBUTTON_EVENT_LONG_REPEAT:
+        case TB_EVENT_LONG_REPEAT:
             if (long_repeat_ != nullptr)
                 long_repeat_();
             break;
-        case TINYBUTTON_EVENT_LONG_RELEASE:
+        case TB_EVENT_LONG_RELEASE:
             if (long_release_ != nullptr)
                 long_release_();
             break;
@@ -167,7 +167,7 @@ private:
     void applyConfig()
     {
         if (started_)
-            tinybutton_configure(&button_, &config_);
+            tb_configure(&button_, &config_);
     }
 
     uint8_t pin_;
@@ -175,8 +175,8 @@ private:
     uint8_t pin_mode_;
     bool started_ = false;
 
-    tinybutton_config_t config_;
-    tinybutton_t button_ = {};
+    tb_config_t config_;
+    tb_t button_ = {};
 
     Callback press_ = nullptr;
     Callback release_ = nullptr;
